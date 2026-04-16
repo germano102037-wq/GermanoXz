@@ -3,27 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Override | 7º B - AI Live</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;600;900&family=JetBrains+Mono:wght@100;400;700&display=swap" rel="stylesheet">
+    <title>Nexus Override | 7º B</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;600;900&family=JetBrains+Mono:wght@100&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #001f3f;
-            --bg-gradient: linear-gradient(135deg, #001f3f 0%, #003366 100%);
-            --card: rgba(0, 85, 255, 0.15);
-            --border: rgba(255, 230, 0, 0.3);
-            --accent: #FFE600;
-            --accent-secondary: #0055FF;
+            --bg: #000000;
+            --card: rgba(15, 15, 15, 0.85);
+            --border: rgba(255, 255, 255, 0.1);
+            --accent: #ffffff;
             --text: #ffffff;
-            --text-dim: #b0c4de;
+            --text-dim: #666666;
             --font-scale: 1;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
 
         body {
-            background: var(--bg-gradient);
-            background-size: 200% 200%;
-            animation: gradientBG 15s ease infinite;
+            background-color: var(--bg);
             color: var(--text);
             min-height: 100vh;
             display: flex;
@@ -31,439 +27,295 @@
             align-items: center;
             overflow-x: hidden;
             font-size: calc(16px * var(--font-scale));
+            transition: all 0.5s ease;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* --- ANIMAÇÕES --- */
+        @keyframes entrar {
+            0% { opacity: 0; transform: translateY(30px); filter: blur(10px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
+        .animar { animation: entrar 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 
+        /* --- RELÓGIO GIGANTE (TELA CHEIA) --- */
         #tela-cheia-relogio {
-            display: none; position: fixed; inset: 0; background: #000; z-index: 30000;
+            display: none; position: fixed; inset: 0; background: black; z-index: 30000;
             flex-direction: column; align-items: center; justify-content: center;
             cursor: pointer;
         }
         #relogio-gigante { 
-             font-size: 18vw; font-weight: 900; font-family: 'JetBrains Mono', monospace;
-             letter-spacing: -10px; line-height: 1; color: var(--accent); 
+            font-size: 18vw; font-weight: 100; font-family: 'JetBrains Mono', monospace; 
+            letter-spacing: -10px; line-height: 1;
         }
-        #data-gigante { font-size: 2vw; letter-spacing: 15px; color: var(--text); text-transform: uppercase; margin-top: 10px; }
+        #data-gigante { font-size: 2vw; letter-spacing: 15px; color: #333; text-transform: uppercase; margin-top: 10px; }
 
+        /* --- INTERFACE PRINCIPAL --- */
         header { width: 100%; padding: 80px 20px 40px; text-align: center; }
-        #clock { font-size: 7rem; font-weight: 900; letter-spacing: -6px; font-family: 'JetBrains Mono', monospace; color: var(--text); }
-        #date-text { font-size: 0.8rem; letter-spacing: 8px; color: var(--accent); text-transform: uppercase; font-weight: 600; }
+        #clock { font-size: 7rem; font-weight: 100; letter-spacing: -6px; font-family: 'JetBrains Mono', monospace; }
+        #date-text { font-size: 0.7rem; letter-spacing: 8px; color: var(--text-dim); text-transform: uppercase; }
 
         .main-container { width: 90%; max-width: 900px; margin-top: 40px; }
-        
         .hero-card {
             background: var(--card); border: 1px solid var(--border); border-radius: 40px;
-            padding: 80px 40px; text-align: center; backdrop-filter: blur(20px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            position: relative; overflow: hidden;
+            padding: 80px 40px; text-align: center; backdrop-filter: blur(30px);
+            box-shadow: 0 50px 100px rgba(0,0,0,0.9);
         }
 
-        .status-tag { font-size: 0.6rem; letter-spacing: 5px; color: var(--accent); text-transform: uppercase; margin-bottom: 20px; display: block; font-weight: 700; }
-        .prof-name { font-size: 4rem; font-weight: 900; letter-spacing: -2px; line-height: 1; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.3); }
+        .status-tag { font-size: 0.6rem; letter-spacing: 5px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 20px; display: block; }
+        .prof-name { font-size: 4rem; font-weight: 900; letter-spacing: -2px; line-height: 1; }
         .subject-name { font-size: 1.5rem; color: var(--text-dim); margin: 15px 0 40px; font-weight: 300; }
 
-        .barra-progresso { width: 100%; height: 6px; background: rgba(255,255,255,0.1); position: relative; margin-bottom: 20px; border-radius: 3px; overflow: hidden; }
-        .preenchimento { position: absolute; height: 100%; background: var(--accent); width: 0%; transition: width 1s linear; box-shadow: 0 0 20px var(--accent); }
+        .barra-progresso { width: 100%; height: 1px; background: var(--border); position: relative; margin-bottom: 20px; }
+        .preenchimento { position: absolute; height: 100%; background: var(--accent); width: 0%; transition: width 1s linear; box-shadow: 0 0 20px white; }
 
-        .item-lista { display: flex; justify-content: space-between; align-items: center; padding: 25px 0; border-bottom: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
-        .item-lista:hover { background: rgba(255,255,255,0.05); padding-left: 10px; border-bottom: 1px solid var(--accent); }
+        /* --- LISTA --- */
+        .item-lista { display: flex; justify-content: space-between; align-items: center; padding: 25px 0; border-bottom: 1px solid var(--border); }
         .item-meta { font-size: 0.8rem; color: var(--text-dim); }
 
+        /* --- PAINEL ADMIN --- */
         #admin-lateral {
             position: fixed; top: 0; right: -450px; width: 400px; height: 100vh;
-            background: #001f3f; border-left: 2px solid var(--accent); z-index: 10000;
+            background: #080808; border-left: 1px solid #1a1a1a; z-index: 10000;
             padding: 40px; transition: 0.7s cubic-bezier(0.8, 0, 0.2, 1); overflow-y: auto;
-            box-shadow: -20px 0 50px rgba(0,0,0,0.5);
         }
         #admin-lateral.active { right: 0; }
-        .admin-label { display: block; font-size: 0.55rem; color: var(--accent); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 2px; font-weight: 700; }
-        .admin-btn { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px; cursor: pointer; font-size: 0.7rem; margin-bottom: 8px; font-weight: 600; transition: 0.3s; }
-        .admin-btn:hover { background: var(--accent); color: #000; }
-        .admin-input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid #333; color: white; padding: 10px; font-size: 0.8rem; margin-bottom: 10px; outline: none; }
+        .admin-label { display: block; font-size: 0.55rem; color: #555; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 2px; }
+        .admin-btn { width: 100%; background: #111; border: 1px solid #222; color: #fff; padding: 12px; cursor: pointer; font-size: 0.7rem; margin-bottom: 8px; font-weight: 600; }
+        .admin-btn:hover { background: #fff; color: #000; }
+        .admin-input { width: 100%; background: #000; border: 1px solid #222; color: white; padding: 10px; font-size: 0.8rem; margin-bottom: 10px; outline: none; }
 
+        /* --- LOGIN --- */
         #login-overlay { position: fixed; inset: 0; background: #000; z-index: 40000; display: none; align-items: center; justify-content: center; flex-direction: column; }
-        #login-input { background: transparent; border: none; border-bottom: 2px solid var(--accent); color: white; font-size: 5rem; width: 250px; text-align: center; outline: none; font-family: 'JetBrains Mono'; }
-
-        #ai-btn {
-            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
-            background: var(--accent); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 20000;
-            box-shadow: 0 0 30px rgba(255, 230, 0, 0.6); transition: 0.3s;
-            animation: pulse-ai 2s infinite;
-        }
-        #ai-btn:hover { transform: scale(1.1); }
-        #ai-btn svg { width: 30px; height: 30px; fill: #000; }
-
-        @keyframes pulse-ai {
-            0% { box-shadow: 0 0 0 0 rgba(255, 230, 0, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(255, 230, 0, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 230, 0, 0); }
-        }
-
-        #ai-window {
-            position: fixed; bottom: 100px; right: 30px; width: 350px; height: 450px;
-            background: rgba(0, 31, 63, 0.95); border: 1px solid var(--accent);
-            border-radius: 20px; z-index: 20000; display: none; flex-direction: column;
-            backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            transform-origin: bottom right; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes popIn { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
-
-        .ai-header { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); border-radius: 20px 20px 0 0; }
-        .ai-title { font-size: 0.8rem; color: var(--accent); font-weight: 700; letter-spacing: 1px; }
-        .ai-close { cursor: pointer; color: #fff; font-size: 1.2rem; }
-
-        .ai-messages { flex: 1; padding: 15px; overflow-y: auto; font-size: 0.85rem; }
-        .msg { margin-bottom: 10px; padding: 8px 12px; border-radius: 10px; max-width: 80%; }
-        .msg.user { background: var(--accent-secondary); align-self: flex-end; margin-left: auto; text-align: right; color: #fff; }
-        .msg.ai { background: rgba(255,255,255,0.1); align-self: flex-start; color: #e0e0e0; }
-        
-        .typing-indicator { font-style: italic; font-size: 0.7rem; color: var(--accent); margin-bottom: 5px; display: none; }
-
-        .ai-input-area { padding: 15px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px; background: rgba(0,0,0,0.2); border-radius: 0 0 20px 20px; }
-        #ai-input { flex: 1; background: transparent; border: 1px solid #333; color: white; padding: 8px; border-radius: 5px; outline: none; }
-        #ai-input:focus { border-color: var(--accent); }
-        #ai-send { background: var(--accent); border: none; color: #000; padding: 0 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        #login-input { background: transparent; border: none; border-bottom: 2px solid #222; color: white; font-size: 5rem; width: 250px; text-align: center; outline: none; font-family: 'JetBrains Mono'; }
 
         footer { padding: 100px; opacity: 0.1; letter-spacing: 20px; font-weight: 900; }
-        
-        @keyframes entrar { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
-        .animar { animation: entrar 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
     </style>
 </head>
 <body>
 
-    <div id="tela-cheia-relogio" onclick="fecharRelogioGigante()">
-        <div id="relogio-gigante">00:00:00</div>
-        <div id="data-gigante">DATA DO SISTEMA</div>
-        <div style="position: absolute; bottom: 40px; color: #555; font-size: 0.6rem; letter-spacing: 5px;">TOQUE PARA SAIR</div>
+<div id="tela-cheia-relogio" onclick="fecharRelogioGigante()">
+    <div id="relogio-gigante">00:00:00</div>
+    <div id="data-gigante">DATA DO SISTEMA</div>
+    <div style="position: absolute; bottom: 40px; color: #222; font-size: 0.6rem; letter-spacing: 5px;">TOQUE PARA SAIR</div>
+</div>
+
+<div id="login-overlay">
+    <div style="letter-spacing: 10px; font-size: 0.6rem; color: #333; margin-bottom: 20px;">ACESSO RESTRITO</div>
+    <input type="password" id="login-input" maxlength="2">
+</div>
+
+<aside id="admin-lateral">
+    <div style="font-size: 0.6rem; letter-spacing: 5px; color: #333; margin-bottom: 40px;">MODO ADMIN</div>
+
+    <div style="margin-bottom: 30px;">
+        <label class="admin-label">Controle de Exibição</label>
+        <button class="admin-btn" onclick="abrirRelogioGigante()">TELA CHEIA (HORA + SEG)</button>
+        <button class="admin-btn" onclick="ativarEdicao()">EDITAR TEXTOS</button>
     </div>
 
-    <div id="login-overlay">
-        <div style="letter-spacing: 10px; font-size: 0.6rem; color: var(--accent); margin-bottom: 20px;">ACESSO RESTRITO</div>
-        <input type="password" id="login-input" maxlength="2">
+    <div style="margin-bottom: 30px;">
+        <label class="admin-label">Navegação Temporal</label>
+        <div style="display: flex; gap: 5px;">
+            <button class="admin-btn" onclick="mudarDia(-1)">-1 DIA</button>
+            <button class="admin-btn" onclick="mudarDia(1)">+1 DIA</button>
+        </div>
+        <button class="admin-btn" onclick="resetarTudo()">HORA REAL</button>
     </div>
 
-    <aside id="admin-lateral">
-        <div style="font-size: 0.6rem; letter-spacing: 5px; color: var(--accent); margin-bottom: 40px;">MODO ADMIN // NEXUS CORE</div>
+    <div style="margin-bottom: 30px;">
+        <label class="admin-label">Ajuste de Horário</label>
+        <div style="display: flex; gap: 5px;">
+            <button class="admin-btn" onclick="mudarHora(-3600)">-1H</button>
+            <button class="admin-btn" onclick="mudarHora(3600)">+1H</button>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 30px;">
+        <label class="admin-label">Visual</label>
+        <input type="color" class="admin-input" oninput="mudarCor('--accent', this.value)">
+    </div>
+
+    <button class="admin-btn" style="background: #200; color: #f44; border: none; margin-top: 20px;" onclick="location.reload()">REINICIAR TUDO</button>
+</aside>
+
+<header class="animar">
+    <div id="clock">00:00:00</div>
+    <div id="date-text">...</div>
+</header>
+
+<div class="main-container animar" style="animation-delay: 0.2s;">
+    <div class="hero-card">
+        <span class="status-tag">Monitorando Cronograma</span>
+        <h2 id="main-prof" class="prof-name">Aguardando</h2>
+        <p id="main-subject" class="subject-name">Sincronizando...</p>
+        <div class="barra-progresso">
+            <div id="bar-fill" class="preenchimento"></div>
+        </div>
+        <div id="main-timer" style="font-family: 'JetBrains Mono'; font-size: 0.9rem; letter-spacing: 4px;">00:00:00</div>
+    </div>
+</div>
+
+<div class="main-container animar" style="animation-delay: 0.4s; margin-bottom: 100px;">
+    <h3 style="font-size: 0.6rem; letter-spacing: 5px; color: #222; text-transform: uppercase; margin-bottom: 30px;">Próximos Compromissos</h3>
+    <div id="lista-proximas"></div>
+</div>
+
+<footer>GERMANO</footer>
+
+<script>
+    const grade7B = {
+        1: [
+            { s: "07:30", e: "08:20", t: "História", p: "Francielle" },
+            { s: "08:20", e: "09:10", t: "História", p: "Francielle" },
+            { s: "09:10", e: "09:30", t: "INTERVALO", p: "Pátio" },
+            { s: "09:30", e: "10:20", t: "Matemática", p: "Denice" },
+            { s: "10:20", e: "11:10", t: "Matemática", p: "Denice" },
+            { s: "11:10", e: "12:00", t: "P.T.", p: "Ana Paula" },
+            { s: "12:00", e: "12:50", t: "Ciências", p: "Valdemar" }
+        ],
+        2: [
+            { s: "07:30", e: "08:20", t: "Gramática", p: "Adília" },
+            { s: "08:20", e: "09:10", t: "Intel. Cria. E Dig.", p: "Flávia" },
+            { s: "09:10", e: "09:30", t: "INTERVALO", p: "Pátio" },
+            { s: "09:30", e: "10:20", t: "Matemática", p: "Denice" },
+            { s: "10:20", e: "11:10", t: "Ed. Física", p: "Marcelo" },
+            { s: "11:10", e: "12:00", t: "Laboratório", p: "Mª Catarina" }
+        ],
+        3: [
+            { s: "07:30", e: "08:20", t: "Inglês", p: "Mônica" },
+            { s: "08:20", e: "09:10", t: "Artes", p: "Claudio" },
+            { s: "09:10", e: "09:30", t: "INTERVALO", p: "Pátio" },
+            { s: "09:30", e: "10:20", t: "Ciências", p: "Valdemar" },
+            { s: "10:20", e: "11:10", t: "P.T.", p: "Ana Paula" },
+            { s: "11:10", e: "12:00", t: "Ed. Física", p: "Marcelo" }
+        ],
+        4: [
+            { s: "07:30", e: "08:20", t: "Prat. Leit. e Escrita", p: "Paula M." },
+            { s: "08:20", e: "09:10", t: "Oficina de Inglês", p: "Priscila" },
+            { s: "09:10", e: "09:30", t: "INTERVALO", p: "Pátio" },
+            { s: "09:30", e: "10:20", t: "Inglês", p: "Mônica" },
+            { s: "10:20", e: "11:10", t: "Gramática", p: "Adília" },
+            { s: "11:10", e: "12:00", t: "Gramática", p: "Adília" }
+        ],
+        5: [
+            { s: "07:30", e: "08:20", t: "P.T.", p: "Ana Paula" },
+            { s: "08:20", e: "09:10", t: "Geografia", p: "Wilson" },
+            { s: "09:10", e: "09:30", t: "INTERVALO", p: "Pátio" },
+            { s: "09:30", e: "10:20", t: "Geografia", p: "Wilson" },
+            { s: "10:20", e: "11:10", t: "Matemática", p: "Denice" },
+            { s: "11:10", e: "12:00", t: "Matemática", p: "Denice" }
+        ]
+    };
+
+    let offsetHora = 0;
+    let offsetDia = 0;
+    let bufferTeclado = "";
+
+    function atualizar() {
+        let agora = new Date();
+        if (offsetHora !== 0) agora.setSeconds(agora.getSeconds() + offsetHora);
+        if (offsetDia !== 0) agora.setDate(agora.getDate() + offsetDia);
         
-        <div style="margin-bottom: 30px;">
-            <label class="admin-label">Controle de Exibição</label>
-            <button class="admin-btn" onclick="abrirRelogioGigante()">TELA CHEIA (HORA + SEG)</button>
-            <button class="admin-btn" onclick="ativarEdicao()">EDITAR TEXTOS (DEBUG)</button>
-        </div>
+        const h = agora.getHours().toString().padStart(2, '0');
+        const m = agora.getMinutes().toString().padStart(2, '0');
+        const s = agora.getSeconds().toString().padStart(2, '0');
 
-        <div style="margin-bottom: 30px;">
-            <label class="admin-label">Navegação Temporal</label>
-            <div style="display: flex; gap: 5px;">
-                <button class="admin-btn" onclick="mudarDia(-1)">-1 DIA</button>
-                <button class="admin-btn" onclick="mudarDia(1)">+1 DIA</button>
-            </div>
-            <button class="admin-btn" onclick="resetarTudo()">HORA REAL (SYNC)</button>
-        </div>
+        const tempoFormatado = `${h}:${m}:${s}`;
+        document.getElementById('clock').textContent = tempoFormatado;
+        document.getElementById('relogio-gigante').textContent = tempoFormatado;
+        
+        const dataFormatada = agora.toLocaleDateString('pt-BR', {weekday: 'long', day: 'numeric', month: 'long'}).toUpperCase();
+        document.getElementById('date-text').textContent = dataFormatada;
+        document.getElementById('data-gigante').textContent = dataFormatada;
 
-        <div style="margin-bottom: 30px;">
-            <label class="admin-label">Configuração da IA (OpenRouter)</label>
-            <p style="font-size: 0.7rem; color: #aaa; margin-bottom: 5px;">API configurada automaticamente.</p>
-            <button class="admin-btn" onclick="testarIA()">TESTAR CONEXÃO</button>
-        </div>
+        const dia = agora.getDay();
+        const tempoSeg = (agora.getHours() * 3600) + (agora.getMinutes() * 60) + agora.getSeconds();
+        const grade = grade7B[dia] || [];
 
-        <button class="admin-btn" style="background: #200; color: #f44; border: none; margin-top: 20px;" onclick="location.reload()">REINICIAR SISTEMA</button>
-    </aside>
+        const heroProf = document.getElementById('main-prof');
+        const heroSub = document.getElementById('main-subject');
+        const heroTimer = document.getElementById('main-timer');
+        const barra = document.getElementById('bar-fill');
+        const lista = document.getElementById('lista-proximas');
 
-    <header class="animar">
-        <div id="clock">00:00:00</div>
-        <div id="date-text">...</div>
-    </header>
+        let aulaEncontrada = false;
+        let htmlProx = "";
 
-    <div class="main-container animar" style="animation-delay: 0.2s;">
-        <div class="hero-card">
-            <span class="status-tag">Monitorando Cronograma</span>
-            <h2 id="main-prof" class="prof-name">Aguardando</h2>
-            <p id="main-subject" class="subject-name">Sincronizando...</p>
-            <div class="barra-progresso">
-                <div id="bar-fill" class="preenchimento"></div>
-            </div>
-            <div id="main-timer" style="font-family: 'JetBrains Mono'; font-size: 0.9rem; letter-spacing: 4px; color: var(--accent);">00:00:00</div>
-        </div>
-    </div>
+        grade.forEach(c => {
+            const [sH, sM] = c.s.split(':').map(Number);
+            const [eH, eM] = c.e.split(':').map(Number);
+            const sSeg = (sH * 3600) + (sM * 60);
+            const eSeg = (eH * 3600) + (eM * 60);
 
-    <div class="main-container animar" style="animation-delay: 0.4s; margin-bottom: 100px;">
-        <h3 style="font-size: 0.6rem; letter-spacing: 5px; color: var(--accent); text-transform: uppercase; margin-bottom: 30px; font-weight: 700;">Próximos Compromissos</h3>
-        <div id="lista-proximas"></div>
-    </div>
-
-    <div id="ai-btn" onclick="toggleAI()">
-        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
-    </div>
-
-    <div id="ai-window">
-        <div class="ai-header">
-            <span class="ai-title">NEXUS AI ASSISTANT</span>
-            <span class="ai-close" onclick="toggleAI()">×</span>
-        </div>
-        <div class="ai-messages" id="ai-messages">
-            <div class="msg ai">Olá. Sou a IA integrada. Pergunte sobre o horário, professores ou comandos do site.</div>
-        </div>
-        <div class="typing-indicator" id="typing-indicator">Nexus AI está digitando...</div>
-        <div class="ai-input-area">
-            <input type="text" id="ai-input" placeholder="Pergunte algo..." onkeypress="if(event.key === 'Enter') sendAI()">
-            <button id="ai-send" onclick="sendAI()">→</button>
-        </div>
-    </div>
-
-    <footer>GERMANO // SYSTEM V.3.0</footer>
-
-    <script>
-        // --- CONFIGURAÇÃO DA API OPENROUTER ---
-        const OPENROUTER_KEY = "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";
-        const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-        const MODEL = "meta-llama/llama-3-8b-instruct:free"; // Modelo gratuito
-
-        // --- DADOS DA GRADE ---
-        const grade7B = {
-            1: [
-                { s: "07:30", e: "08:20", t: "História", p: "Francielle" },
-                { s: "08:20", e: "09:10", t: "História", p: "Francielle" },
-                { s: "09:10", e: "09:30", t: "INTERVALO", p: "Pátio" },
-                { s: "09:30", e: "10:20", t: "Matemática", p: "Denice" },
-                { s: "10:20", e: "11:10", t: "Matemática", p: "Denice" },
-                { s: "11:10", e: "12:00", t: "P.T.", p: "Ana Paula" },
-                { s: "12:00", e: "12:50", t: "Ciências", p: "Valdemar" }
-            ],
-            2: [
-                { s: "07:30", e: "08:20", t: "Gramática", p: "Adília" },
-                { s: "08:20", e: "09:10", t: "Intel. Cria. E Dig.", p: "Flávia" },
-                { s: "09:10", e: "09:30", t: "INTERVALO", p: "Pátio" },
-                { s: "09:30", e: "10:20", t: "Matemática", p: "Denice" },
-                { s: "10:20", e: "11:10", t: "Ed. Física", p: "Marcelo" },
-                { s: "11:10", e: "12:00", t: "Laboratório", p: "Mª Catarina" }
-            ],
-            3: [
-                { s: "07:30", e: "08:20", t: "Inglês", p: "Mônica" },
-                { s: "08:20", e: "09:10", t: "Artes", p: "Claudio" },
-                { s: "09:10", e: "09:30", t: "INTERVALO", p: "Pátio" },
-                { s: "09:30", e: "10:20", t: "Ciências", p: "Valdemar" },
-                { s: "10:20", e: "11:10", t: "P.T.", p: "Ana Paula" },
-                { s: "11:10", e: "12:00", t: "Ed. Física", p: "Marcelo" }
-            ],
-            4: [
-                { s: "07:30", e: "08:20", t: "Prat. Leit. e Escrita", p: "Paula M." },
-                { s: "08:20", e: "09:10", t: "Oficina de Inglês", p: "Priscila" },
-                { s: "09:10", e: "09:30", t: "INTERVALO", p: "Pátio" },
-                { s: "09:30", e: "10:20", t: "Inglês", p: "Mônica" },
-                { s: "10:20", e: "11:10", t: "Gramática", p: "Adília" },
-                { s: "11:10", e: "12:00", t: "Gramática", p: "Adília" }
-            ],
-            5: [
-                { s: "07:30", e: "08:20", t: "P.T.", p: "Ana Paula" },
-                { s: "08:20", e: "09:10", t: "Geografia", p: "Wilson" },
-                { s: "09:10", e: "09:30", t: "INTERVALO", p: "Pátio" },
-                { s: "09:30", e: "10:20", t: "Geografia", p: "Wilson" },
-                { s: "10:20", e: "11:10", t: "Matemática", p: "Denice" },
-                { s: "11:10", e: "12:00", t: "Matemática", p: "Denice" }
-            ]
-        };
-
-        let offsetHora = 0;
-        let offsetDia = 0;
-        let bufferTeclado = "";
-
-        function atualizar() {
-            let agora = new Date();
-            if (offsetHora !== 0) agora.setSeconds(agora.getSeconds() + offsetHora);
-            if (offsetDia !== 0) agora.setDate(agora.getDate() + offsetDia);
-            
-            const h = agora.getHours().toString().padStart(2, '0');
-            const m = agora.getMinutes().toString().padStart(2, '0');
-            const s = agora.getSeconds().toString().padStart(2, '0');
-
-            const tempoFormatado = `${h}:${m}:${s}`;
-            document.getElementById('clock').textContent = tempoFormatado;
-            document.getElementById('relogio-gigante').textContent = tempoFormatado;
-            
-            const dataFormatada = agora.toLocaleDateString('pt-BR', {weekday: 'long', day: 'numeric', month: 'long'}).toUpperCase();
-            document.getElementById('date-text').textContent = dataFormatada;
-            document.getElementById('data-gigante').textContent = dataFormatada;
-
-            const dia = agora.getDay();
-            const tempoSeg = (agora.getHours() * 3600) + (agora.getMinutes() * 60) + agora.getSeconds();
-            const grade = grade7B[dia] || [];
-
-            const heroProf = document.getElementById('main-prof');
-            const heroSub = document.getElementById('main-subject');
-            const heroTimer = document.getElementById('main-timer');
-            const barra = document.getElementById('bar-fill');
-            const lista = document.getElementById('lista-proximas');
-
-            let aulaEncontrada = false;
-            let htmlProx = "";
-
-            grade.forEach(c => {
-                const [sH, sM] = c.s.split(':').map(Number);
-                const [eH, eM] = c.e.split(':').map(Number);
-                const sSeg = (sH * 3600) + (sM * 60);
-                const eSeg = (eH * 3600) + (eM * 60);
-
-                if (tempoSeg >= sSeg && tempoSeg < eSeg) {
-                    heroProf.textContent = c.p;
-                    heroSub.textContent = c.t;
-                    const perc = ((tempoSeg - sSeg) / (eSeg - sSeg)) * 100;
-                    barra.style.width = perc + "%";
-                    const r = eSeg - tempoSeg;
-                    heroTimer.textContent = `${Math.floor(r/3600).toString().padStart(2,'0')}:${Math.floor((r%3600)/60).toString().padStart(2,'0')}:${(r%60).toString().padStart(2,'0')}`;
-                    aulaEncontrada = true;
-                } else if (tempoSeg < sSeg) {
-                    htmlProx += `
-                    <div class="item-lista">
-                        <div>
-                            <div style="font-weight: 600; color: var(--accent);">${c.t}</div>
-                            <div class="item-meta">Prof. ${c.p} • Início: ${c.s}</div>
-                        </div>
-                        <div style="font-family: 'JetBrains Mono'; font-size: 0.7rem; color: var(--text);">-${Math.floor((sSeg-tempoSeg)/60)}m</div>
-                    </div>`;
-                }
-            });
-
-            if (!aulaEncontrada) {
-                heroProf.textContent = "NENHUMA AULA";
-                heroSub.textContent = "Fora do horário";
-                barra.style.width = "0%";
-                heroTimer.textContent = "00:00:00";
-            }
-            lista.innerHTML = htmlProx || "<div style='color: #555; text-align: center; margin-top: 50px;'>CRONOGRAMA CONCLUÍDO</div>";
-        }
-
-        function mudarHora(s) { offsetHora += s; atualizar(); }
-        function mudarDia(d) { offsetDia += d; atualizar(); }
-        function resetarTudo() { offsetHora = 0; offsetDia = 0; atualizar(); }
-        function ativarEdicao() {
-            const p = document.getElementById('main-prof');
-            const s = document.getElementById('main-subject');
-            const modo = p.contentEditable === "true";
-            p.contentEditable = !modo; s.contentEditable = !modo;
-            p.style.border = modo ? "none" : "1px dashed #333";
-        }
-        function abrirRelogioGigante() { document.getElementById('tela-cheia-relogio').style.display = 'flex'; }
-        function fecharRelogioGigante() { document.getElementById('tela-cheia-relogio').style.display = 'none'; }
-
-        window.addEventListener('keydown', (e) => {
-            bufferTeclado += e.key;
-            if(bufferTeclado.length > 10) bufferTeclado = bufferTeclado.substring(1);
-            if(bufferTeclado.includes("3115")) {
-                bufferTeclado = "";
-                document.getElementById('login-overlay').style.display = 'flex';
-                const input = document.getElementById('login-input');
-                input.value = ""; input.focus();
-                input.oninput = () => {
-                    if(input.value === "16") {
-                        document.getElementById('login-overlay').style.display = 'none';
-                        document.getElementById('admin-lateral').classList.add('active');
-                    }
-                }
-            }
-            if(e.key === "Escape") {
-                document.getElementById('admin-lateral').classList.remove('active');
-                document.getElementById('login-overlay').style.display = 'none';
-                fecharRelogioGigante();
+            if (tempoSeg >= sSeg && tempoSeg < eSeg) {
+                heroProf.textContent = c.p;
+                heroSub.textContent = c.t;
+                const perc = ((tempoSeg - sSeg) / (eSeg - sSeg)) * 100;
+                barra.style.width = perc + "%";
+                const r = eSeg - tempoSeg;
+                heroTimer.textContent = `${Math.floor(r/3600).toString().padStart(2,'0')}:${Math.floor((r%3600)/60).toString().padStart(2,'0')}:${(r%60).toString().padStart(2,'0')}`;
+                aulaEncontrada = true;
+            } else if (tempoSeg < sSeg) {
+                htmlProx += `
+                <div class="item-lista">
+                    <div>
+                        <div style="font-weight: 600;">${c.t}</div>
+                        <div class="item-meta">Prof. ${c.p} • Início: ${c.s}</div>
+                    </div>
+                    <div style="font-family: 'JetBrains Mono'; font-size: 0.7rem;">-${Math.floor((sSeg-tempoSeg)/60)}m</div>
+                </div>`;
             }
         });
 
-        // --- IA LOGIC (OPENROUTER API) ---
-        function toggleAI() {
-            const win = document.getElementById('ai-window');
-            win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
-            if(win.style.display === 'flex') document.getElementById('ai-input').focus();
+        if (!aulaEncontrada) {
+            heroProf.textContent = "NENHUMA AULA";
+            heroSub.textContent = "Fora do horário";
+            barra.style.width = "0%";
+            heroTimer.textContent = "00:00:00";
         }
+        lista.innerHTML = htmlProx || "<div style='color: #111; text-align: center; margin-top: 50px;'>CRONOGRAMA CONCLUÍDO</div>";
+    }
 
-        function addMessage(text, sender) {
-            const div = document.createElement('div');
-            div.className = `msg ${sender}`;
-            div.textContent = text;
-            const container = document.getElementById('ai-messages');
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
-        }
+    // ADMIN
+    function mudarCor(n, v) { document.documentElement.style.setProperty(n, v); }
+    function mudarHora(s) { offsetHora += s; atualizar(); }
+    function mudarDia(d) { offsetDia += d; atualizar(); }
+    function resetarTudo() { offsetHora = 0; offsetDia = 0; atualizar(); }
+    function ativarEdicao() {
+        const p = document.getElementById('main-prof');
+        const s = document.getElementById('main-subject');
+        const modo = p.contentEditable === "true";
+        p.contentEditable = !modo; s.contentEditable = !modo;
+        p.style.border = modo ? "none" : "1px dashed #333";
+    }
+    function abrirRelogioGigante() { document.getElementById('tela-cheia-relogio').style.display = 'flex'; }
+    function fecharRelogioGigante() { document.getElementById('tela-cheia-relogio').style.display = 'none'; }
 
-        async function testarIA() {
-            addMessage("Testando conexão...", "ai");
-            const resposta = await callAI("Diga apenas 'Online'.");
-            if(resposta) {
-                alert("Conexão estabelecida com sucesso!");
-                addMessage(resposta, 'ai');
-            } else {
-                alert("Erro na conexão.");
+    window.addEventListener('keydown', (e) => {
+        bufferTeclado += e.key;
+        if(bufferTeclado.length > 10) bufferTeclado = bufferTeclado.substring(1);
+        if(bufferTeclado.includes("3115")) {
+            bufferTeclado = "";
+            document.getElementById('login-overlay').style.display = 'flex';
+            const input = document.getElementById('login-input');
+            input.value = ""; input.focus();
+            input.oninput = () => {
+                if(input.value === "16") {
+                    document.getElementById('login-overlay').style.display = 'none';
+                    document.getElementById('admin-lateral').classList.add('active');
+                }
             }
         }
-
-        async function callAI(userPrompt) {
-            const profAtual = document.getElementById('main-prof').textContent;
-            const aulaAtual = document.getElementById('main-subject').textContent;
-            
-            const systemMessage = `Você é uma assistente virtual de um site escolar chamado Nexus Override. 
-            DADOS ATUAIS DO SITE: Aula atual: ${aulaAtual}, Professor: ${profAtual}.
-            Responda sempre em português, de forma curta e útil.`;
-
-            try {
-                const response = await fetch(OPENROUTER_URL, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${OPENROUTER_KEY}`,
-                        "Content-Type": "application/json",
-                        "HTTP-Referer": window.location.href,
-                        "X-Title": "Nexus Override"
-                    },
-                    body: JSON.stringify({
-                        model: MODEL,
-                        messages: [
-                            { role: "system", content: systemMessage },
-                            { role: "user", content: userPrompt }
-                        ],
-                        max_tokens: 150
-                    }),
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error("API Error:", errorData);
-                    return "Erro na API: " + (errorData.error?.message || "Desconhecido");
-                }
-
-                const result = await response.json();
-                
-                if (result.choices && result.choices[0] && result.choices[0].message) {
-                    return result.choices[0].message.content.trim();
-                }
-                return "Resposta inválida da IA.";
-            } catch (e) {
-                console.error("Connection Error:", e);
-                return "Erro de conexão com a API.";
-            }
+        if(e.key === "Escape") {
+            document.getElementById('admin-lateral').classList.remove('active');
+            document.getElementById('login-overlay').style.display = 'none';
+            fecharRelogioGigante();
         }
+    });
 
-        async function sendAI() {
-            const input = document.getElementById('ai-input');
-            const text = input.value.trim();
-            if(!text) return;
-            
-            addMessage(input.value, 'user');
-            input.value = '';
-            
-            document.getElementById('typing-indicator').style.display = 'block';
+    setInterval(atualizar, 1000);
+    atualizar();
+</script>
 
-            const resposta = await callAI(text);
-            
-            addMessage(resposta, 'ai');
-            document.getElementById('typing-indicator').style.display = 'none';
-        }
-
-        setInterval(atualizar, 1000);
-        atualizar();
-    </script>
 </body>
 </html>
